@@ -3,12 +3,14 @@ __author__ = 'MALONG'
 from sklearn.ensemble import RandomForestRegressor
 from matplotlib import pyplot
 from sklearn.externals import joblib
+import demjson
 import Logging
 import logging
 
 from DataUtil import *
 
-model_g = ""
+model = RandomForestRegressor(n_estimators=500, oob_score=True, n_jobs=-1, max_features=0.001,
+                              min_samples_leaf=3)
 
 list = getData("2013-05-02", "2016-01-01")
 x_train = []
@@ -36,12 +38,11 @@ def getErrorValue(param):
 
 
 def updateModel(param):
+    global model
     model = RandomForestRegressor(n_estimators=500, oob_score=True, n_jobs=-1, max_features=param[0],
                                   min_samples_leaf=param[1])
     model.fit(x_train, y_train)
     joblib.dump(model, "model/model.pkl", compress=3)
-    model_g = model
-    print model_g
     logging.info("Successed update model file.")
 
 
@@ -56,5 +57,21 @@ def caculate():
     pyplot.show()
 
 
+def predict(start, end):
+    l_p = getData(start, end)
+    x_p = []
+    date_p = []
+    for i in l_p:
+        x_t_p = [i.open, i.ma5, i.ma10, i.ma20, i.v_ma5, i.v_ma10, i.v_ma20]
+        x_p.append(x_t_p)
+        date_p.append(i.date)
+    y_list = model.predict(x_p)
+    json_list = []
+    for i in range(len(y_list)):
+        json_list.append((date_p[i], y_list[i]))
+    return demjson.encode(json_list)
+
+
 if __name__ == "__main__":
     updateModel((0.001, 3))
+    print predict('2016-01-05', '2016-05-01')

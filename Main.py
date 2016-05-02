@@ -26,7 +26,15 @@ def buildDayStr(year, month, day):
     return str(year) + "-" + str(month) + "-" + str(day)
 
 
-if __name__ == "__main__":
-    threading.Thread(target=updateDateDaily()).start()
+def startServer():
     Server.startServer()
 
+
+if __name__ == "__main__":
+    StockPredict.updateModel((0.001, 3))
+
+    t1 = threading.Thread(target=startServer())
+    t2 = threading.Thread(target=updateDateDaily())
+
+    t1.start()
+    t2.start()

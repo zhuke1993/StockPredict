@@ -6,6 +6,7 @@ import time
 import DataUtil
 import Logging
 import logging
+import StockPredict
 
 
 def tcplink(sock, addr):
@@ -18,7 +19,7 @@ def tcplink(sock, addr):
             params = data.split("&")
             start = params[0].split("=")[1]
             end = params[1].split("=")[1]
-            json = DataUtil.getDataPredict(start, end)
+            json = StockPredict.predict(start, end)
             sock.send(json)
         else:
             sock.close()
@@ -35,6 +36,7 @@ def startServer():
         sock, addr = s.accept()
         t = threading.Thread(target=tcplink, args=(sock, addr))
         t.start()
+
 
 if __name__ == "__main__":
     startServer()
