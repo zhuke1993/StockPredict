@@ -57,7 +57,7 @@ def getDBEngine(url):
 # 得到start-end期间的数据，并追加到数据库表中
 def updateHistoryData(start, end):
     df = ts.get_hist_data('sh', start=start, end=end)
-    engine = getDBEngine('mysql://root:929184318@127.0.0.1:3306/stock_predict?charset=utf8')
+    engine = getDBEngine('mysql://root:929184318@zhuke1993.vicp.cc:3306/stock_predict?charset=utf8')
     # 存入数据库
     df.to_sql('stock_data', engine, if_exists='append')
     logging.info("Successed update the data, start = %s and end = %s" % (start, end))
@@ -65,7 +65,7 @@ def updateHistoryData(start, end):
 
 # 得到start-end期间的data数据
 def getData(start, end):
-    engine = create_engine('mysql://root:929184318@127.0.0.1:3306/stock_predict?charset=utf8')
+    engine = create_engine('mysql://root:929184318@zhuke1993.vicp.cc:3306/stock_predict?charset=utf8')
     sql = "select * from stock_data where date between '%s' and '%s'  order by date asc" % (start, end)
     DB_Session = sessionmaker(bind=engine)
     session = DB_Session()
@@ -79,7 +79,7 @@ def getData(start, end):
 
 
 def getDataPredict(start, end):
-    engine = create_engine('mysql://root:929184318@127.0.0.1:3306/stock_predict?charset=utf8')
+    engine = create_engine('mysql://root:929184318@zhuke1993.vicp.cc:3306/stock_predict?charset=utf8')
     sql = "select date, close from stock_data_predict where date between '%s' and '%s' order by date asc" % (start, end)
     DB_Session = sessionmaker(bind=engine)
     session = DB_Session()
