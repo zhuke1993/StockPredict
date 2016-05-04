@@ -35,6 +35,7 @@ if __name__ == "__main__":
 
     t1 = threading.Thread(target=startServer())
     t2 = threading.Thread(target=updateDateDaily())
-
+    t1.setDaemon(True)
+    t2.setDaemon(True)
     t1.start()
     t2.start()
